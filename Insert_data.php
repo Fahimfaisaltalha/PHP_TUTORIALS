@@ -12,9 +12,10 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 echo "Connection was successful<br>";
-
-
-$sql = "INSERT INTO `trip` (`name`, `dest`) VALUES ('Soroar', 'England')";
+//Variable to be inserted to table
+$name="Sohag";
+$destination="Russia";
+$sql = "INSERT INTO `trip` (`name`, `dest`) VALUES ('$name', '$destination')";
 $result=mysqli_query($conn, $sql);
 if ($result) {
     echo "Table Record was inserted successfully.";
