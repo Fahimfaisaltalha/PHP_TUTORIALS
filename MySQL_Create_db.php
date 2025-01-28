@@ -7,7 +7,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "dbtalha"; // Your database name
+$database = "db_talha"; // Your database name
 
 // Create a Connection
 $conn = mysqli_connect($servername, $username, $password, $database);
