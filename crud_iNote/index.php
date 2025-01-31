@@ -16,13 +16,24 @@ if (!$conn) {
 }
 
 if ($_SERVER['REQUEST_METHOD']=='POST'){
+  if(isset( $_POST['snoEdit'])){
+    // Update the record
+    $sno = $_POST["snoEdit"];
+    $title=$_POST["titleEdit"];
+    $description =$_POST["descriptionEdit"];
+  $sql = "UPDATE `notes` SET `title` = '$title',`description`='$description' WHERE `notes`.`sno` = $sno";
+  $result=mysqli_query($conn, $sql);
+  }
+}
+else{
   $title = $_POST["title"];
   $description =$_POST["description"];
 $sql = "INSERT INTO `notes` (`title`, `description`) VALUES ('$title', '$description')";
 $result=mysqli_query($conn, $sql);
 if ($result) {
     $insert=true;
-} else {
+} 
+else {
     echo "The Record was not inserted Successfully: " . mysqli_error($conn);
 }
 
@@ -57,6 +68,7 @@ if ($result) {
       </div>
       <div class="modal-body">
       <form action="/PHP_TUTORIALS/crud_iNote/index.php" method="post">
+        <input type="hidden" name="snoEdit" id="snoEdit">
       <div class="my-3">
         <label for="title" class="form-label">Note Title</label>
         <input type="text" class="form-control" id="titleEdit" name="titleEdit" aria-describedby="emailHelp">
@@ -146,7 +158,7 @@ if ($result) {
           <th scope='row'>".$sno ."</th>
           <td>".$row['title'] . "</td>
           <td>".$row['description'] ."</td>
-          <td> <button class='edit btn btn-sm btn-primary'>Edit</button> <a href='/del'\>Delete</a></td>
+          <td> <button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <a href='/del'\>Delete</a></td>
         </tr>";
 
         }
@@ -177,6 +189,8 @@ if ($result) {
       description = tr.getElementsByTagName("td")[1].innerText;
       
       console.log(title, description);
+      snoEdit.value=e.target.id;
+      console.log(e.target.id)
       
       document.getElementById("titleEdit").value = title;
       document.getElementById("descriptionEdit").value = description;
