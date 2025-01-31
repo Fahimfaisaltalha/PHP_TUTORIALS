@@ -37,6 +37,8 @@ if ($result) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>iNotes - Note taking make easy</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css">
+  
 </head>
 
 <body>
@@ -89,9 +91,9 @@ if ($result) {
       <button type="submit" class="btn btn-primary my-3">Add Note</button>
     </form>
   </div>
-  <div class="container">
+  <div class="container" my-4>
 
-    <table class="table">
+    <table class="table" id="myTable">
       <thead>
         <tr>
           <th scope="col">S.No</th>
@@ -104,9 +106,11 @@ if ($result) {
         <?php
         $sql = "SELECT * FROM `notes`";
         $result = mysqli_query($conn, $sql);
+        $sno=0;
         while ($row = mysqli_fetch_assoc($result)) {
+          $sno++;
           echo "<tr>
-          <th scope='row'>".$row['sno'] ."</th>
+          <th scope='row'>".$sno ."</th>
           <td>".$row['title'] . "</td>
           <td>".$row['description'] ."</td>
           <td>Action</td>
@@ -120,7 +124,13 @@ if ($result) {
 
     </table>
   </div>
+  <hr>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="    crossorigin="anonymous"></script>
+  <script src="//cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
+  <script>
+    let table = new DataTable('#myTable');
+  </script>
 </body>
 
 </html>
