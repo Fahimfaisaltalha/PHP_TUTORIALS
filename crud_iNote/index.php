@@ -1,6 +1,7 @@
 <?php
 //Connect to the database
 //INSERT INTO `notes` (`sno`, `title`, `description`, `tstamp`) VALUES (NULL, 'Hero', 'Hero are not created they just born', current_timestamp());
+$insert=false;
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -14,6 +15,18 @@ if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
 }
 
+if ($_SERVER['REQUEST_METHOD']=='POST'){
+  $title = $_POST["title"];
+  $description =$_POST["description"];
+$sql = "INSERT INTO `notes` (`title`, `description`) VALUES ('$title', '$description')";
+$result=mysqli_query($conn, $sql);
+if ($result) {
+    $insert=true;
+} else {
+    echo "The Record was not inserted Successfully: " . mysqli_error($conn);
+}
+
+}
 
 ?>
 <!doctype html>
@@ -53,30 +66,30 @@ if (!$conn) {
       </div>
     </div>
   </nav>
+  <?php
+  if($insert){
+    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+  <strong>Success!</strong> Your note has been insert successfully.
+  <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+</div>";
+  }
+
+  ?>
   <div class="container">
     <h2>Add Note</h2>
-    <form>
+    <form action="/PHP_TUTORIALS/crud_iNote/index.php" method="post">
       <div class="my-3">
         <label for="title" class="form-label">Note Title</label>
         <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
       </div>
       <label for="floatingTextarea2">Note Description</label>
       <div class="form-floating">
-        <textarea class="form-control" id="desc" name="desc" style="height: 100px"></textarea>
+        <textarea class="form-control" id="description" name="description" style="height: 100px"></textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Add Note</button>
+      <button type="submit" class="btn btn-primary my-3">Add Note</button>
     </form>
   </div>
   <div class="container">
-    <?php
-    $sql = "SELECT * FROM `notes`";
-    $result = mysqli_query($conn, $sql);
-    while ($row = mysqli_fetch_assoc($result)) {
-      // echo var_dump($row);
-      echo $row['sno'] . " .Title " . $row['title'] . "Desc is " . $row['description'];
-      echo "<br>";
-    }
-    ?>
 
     <table class="table">
       <thead>
@@ -92,18 +105,16 @@ if (!$conn) {
         $sql = "SELECT * FROM `notes`";
         $result = mysqli_query($conn, $sql);
         while ($row = mysqli_fetch_assoc($result)) {
-        
-          
-          echo $row['sno'] . " .Title " . $row['title'] . "Desc is " . $row['description'];
-          echo "<br>";
+          echo "<tr>
+          <th scope='row'>".$row['sno'] ."</th>
+          <td>".$row['title'] . "</td>
+          <td>".$row['description'] ."</td>
+          <td>Action</td>
+        </tr>";
+
         }
         ?>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
+
 
       </tbody>
 
