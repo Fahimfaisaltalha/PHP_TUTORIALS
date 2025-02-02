@@ -73,8 +73,9 @@ else {
         <h1 class="modal-title fs-5" id="editModal">Edit this Note</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
       <form action="/PHP_TUTORIALS/crud_iNote/index.php" method="post">
+      <div class="modal-body">
+      
         <input type="hidden" name="snoEdit" id="snoEdit">
       <div class="my-3">
         <label for="title" class="form-label">Note Title</label>
@@ -84,13 +85,14 @@ else {
       <div class="form-floating">
         <textarea class="form-control" id="descriptionEdit" name="descriptionEdit" style="height: 100px"></textarea>
       </div>
-      <button type="submit" class="btn btn-primary my-3">Add Note</button>
-    </form>
+      
+    
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer d-block mr-auto">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
       </div>
+      </form>
     </div>
   </div>
 </div>
@@ -217,9 +219,10 @@ else {
       // title = tr.getElementsByTagName("td")[0].innerText;
       // description = tr.getElementsByTagName("td")[1].innerText;
       sno=e.target.id.substr(1,);
-      if(confirm("Press a button!")){
+      if(confirm("Are you sure you want to delete this note!")){
         console.log("yes")
         window.location=`/PHP_TUTORIALS/crud_iNote/index.php?delete=${sno}`;
+        //TODO : Create a form and use post request to submit a form
       }
       else {
         console.log("no");
