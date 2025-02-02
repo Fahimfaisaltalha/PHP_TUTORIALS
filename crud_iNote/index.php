@@ -1,7 +1,7 @@
 <?php
 //Connect to the database
-//INSERT INTO `notes` (`sno`, `title`, `description`, `tstamp`) VALUES (NULL, 'Hero', 'Hero are not created they just born', current_timestamp());
-$insert=false;
+
+$insert = false;
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -15,35 +15,32 @@ if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
 }
 
-if(isset($_GET['delete'])){
+if (isset($_GET['delete'])) {
   $sno = $_GET['delete'];
-  
-  $sql= "DELETE FROM `notes` WHERE `sno` = $sno";
-  $result=mysqli_query($conn, $sql);
+
+  $sql = "DELETE FROM `notes` WHERE `sno` = $sno";
+  $result = mysqli_query($conn, $sql);
 }
 
-if ($_SERVER['REQUEST_METHOD']=='POST'){
-  if(isset( $_POST['snoEdit'])){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  if (isset($_POST['snoEdit'])) {
     // Update the record
     $sno = $_POST["snoEdit"];
-    $title=$_POST["titleEdit"];
-    $description =$_POST["descriptionEdit"];
-  $sql = "UPDATE `notes` SET `title` = '$title',`description`='$description' WHERE `notes`.`sno` = $sno";
-  $result=mysqli_query($conn, $sql);
+    $title = $_POST["titleEdit"];
+    $description = $_POST["descriptionEdit"];
+    $sql = "UPDATE `notes` SET `title` = '$title',`description`='$description' WHERE `notes`.`sno` = $sno";
+    $result = mysqli_query($conn, $sql);
+  } else {
+    $title = $_POST["title"];
+    $description = $_POST["description"];
+    $sql = "INSERT INTO `notes` (`title`, `description`) VALUES ('$title', '$description')";
+    $result = mysqli_query($conn, $sql);
+    if ($result) {
+      $insert = true;
+    } else {
+      echo "The Record was not inserted Successfully: " . mysqli_error($conn);
+    }
   }
-}
-else{
-  $title = $_POST["title"];
-  $description =$_POST["description"];
-$sql = "INSERT INTO `notes` (`title`, `description`) VALUES ('$title', '$description')";
-$result=mysqli_query($conn, $sql);
-if ($result) {
-    $insert=true;
-} 
-else {
-    echo "The Record was not inserted Successfully: " . mysqli_error($conn);
-}
-
 }
 
 ?>
@@ -60,46 +57,46 @@ else {
 </head>
 
 <body>
-<!-- Edit modal -->
-<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+  <!-- Edit modal -->
+  <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
   Edit Modal
 </button> -->
 
-<!-- Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="editModal">Edit this Note</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <!-- Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editModal">Edit this Note</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/PHP_TUTORIALS/crud_iNote/index.php" method="post">
+          <div class="modal-body">
+
+            <input type="hidden" name="snoEdit" id="snoEdit">
+            <div class="my-3">
+              <label for="title" class="form-label">Note Title</label>
+              <input type="text" class="form-control" id="titleEdit" name="titleEdit" aria-describedby="emailHelp">
+            </div>
+            <label for="floatingTextarea2">Note Description</label>
+            <div class="form-floating">
+              <textarea class="form-control" id="descriptionEdit" name="descriptionEdit" style="height: 100px"></textarea>
+            </div>
+
+
+          </div>
+          <div class="modal-footer d-block mr-auto">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
       </div>
-      <form action="/PHP_TUTORIALS/crud_iNote/index.php" method="post">
-      <div class="modal-body">
-      
-        <input type="hidden" name="snoEdit" id="snoEdit">
-      <div class="my-3">
-        <label for="title" class="form-label">Note Title</label>
-        <input type="text" class="form-control" id="titleEdit" name="titleEdit" aria-describedby="emailHelp">
-      </div>
-      <label for="floatingTextarea2">Note Description</label>
-      <div class="form-floating">
-        <textarea class="form-control" id="descriptionEdit" name="descriptionEdit" style="height: 100px"></textarea>
-      </div>
-      
-    
-      </div>
-      <div class="modal-footer d-block mr-auto">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
-      </div>
-      </form>
     </div>
   </div>
-</div>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">PHP CRUD</a>
+      <a class="navbar-brand" href="#">Talha's Note</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -123,7 +120,7 @@ else {
     </div>
   </nav>
   <?php
-  if($insert){
+  if ($insert) {
     echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
   <strong>Success!</strong> Your note has been insert successfully.
   <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
@@ -158,89 +155,82 @@ else {
       </thead>
       <tbody>
         <?php
+
         $sql = "SELECT * FROM `notes`";
         $result = mysqli_query($conn, $sql);
-        $sno=0;
-        while ($row = mysqli_fetch_assoc($result)) {
-          $sno++;
-          echo "<tr>
-          <th scope='row'>".$sno ."</th>
-          <td>".$row['title'] . "</td>
-          <td>".$row['description'] ."</td>
-          <td> <button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <button class='delete btn btn-sm btn-primary' id=d".$row['sno'].">Delete</button></td>
-        </tr>";
-
+        $sno = 0;
+        if ($result) {
+          while ($row = mysqli_fetch_assoc($result)) {
+            $sno++;
+            echo "<tr>
+                <th scope='row'>" . $sno . "</th>
+                <td>" . htmlspecialchars($row['title']) . "</td>
+                <td>" . htmlspecialchars($row['description']) . "</td>
+                <td>
+                    <button class='edit btn btn-sm btn-primary' id='" . $row['sno'] . "'>Edit</button>
+                    <button class='delete btn btn-sm btn-danger' id='d" . $row['sno'] . "'>Delete</button>
+                </td>
+              </tr>";
+          }
+        } else {
+          echo "<tr><td colspan='4'>No notes found.</td></tr>";
         }
-        
+
+
         ?>
 
 
-      </tbody><
+      </tbody>
+      <
 
-    </table>
+        </table>
   </div>
   <hr>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
   <script src="//cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
   <script>
     let table = new DataTable('#myTable');
   </script>
-<script>
-  // Select all edit buttons
-  edits = document.getElementsByClassName('edit');
-  Array.from(edits).forEach((element) => {
-    element.addEventListener("click", (e) => {
-      console.log("Edit button clicked");
-      
-      tr = e.target.closest("tr"); // Get the closest row
-      title = tr.getElementsByTagName("td")[0].innerText;
-      description = tr.getElementsByTagName("td")[1].innerText;
-      
-      console.log(title, description);
-      snoEdit.value=e.target.id;
-      console.log(e.target.id)
-      
-      document.getElementById("titleEdit").value = title;
-      document.getElementById("descriptionEdit").value = description;
+  <script>
+    // Select all edit buttons
+    edits = document.getElementsByClassName('edit');
+    Array.from(edits).forEach((element) => {
+      element.addEventListener("click", (e) => {
+        console.log("Edit button clicked");
 
-      // Open the modal
-      let myModal = new bootstrap.Modal(document.getElementById('editModal'));
-      myModal.show();
+        tr = e.target.closest("tr"); // Get the closest row
+        title = tr.getElementsByTagName("td")[0].innerText;
+        description = tr.getElementsByTagName("td")[1].innerText;
+
+        console.log(title, description);
+        snoEdit.value = e.target.id;
+        console.log(e.target.id)
+
+        document.getElementById("titleEdit").value = title;
+        document.getElementById("descriptionEdit").value = description;
+
+        // Open the modal
+        let myModal = new bootstrap.Modal(document.getElementById('editModal'));
+        myModal.show();
+      });
     });
-  });
 
-  deletes = document.getElementsByClassName('delete');
-  Array.from(deletes).forEach((element) => {
-    element.addEventListener("click", (e) => {
-      console.log("Edit button clicked");
-      
-      // tr = e.target.closest("tr"); // Get the closest row
-      // title = tr.getElementsByTagName("td")[0].innerText;
-      // description = tr.getElementsByTagName("td")[1].innerText;
-      sno=e.target.id.substr(1,);
-      if(confirm("Are you sure you want to delete this note!")){
-        console.log("yes")
-        window.location=`/PHP_TUTORIALS/crud_iNote/index.php?delete=${sno}`;
-        //TODO : Create a form and use post request to submit a form
-      }
-      else {
-        console.log("no");
-      }
-      
-      // console.log(title, description);
-      // snoEdit.value=e.target.id;
-      // console.log(e.target.id)
-      
-      // document.getElementById("titleEdit").value = title;
-      // document.getElementById("descriptionEdit").value = description;
+    deletes = document.getElementsByClassName('delete');
+    Array.from(deletes).forEach((element) => {
+      element.addEventListener("click", (e) => {
+        console.log("Delete button clicked");
 
-      // // Open the modal
-      // let myModal = new bootstrap.Modal(document.getElementById('editModal'));
-      // myModal.show();
+        let sno = e.target.id.replace('d', ''); // Fix ID extraction
+        if (confirm("Are you sure you want to delete this note?")) {
+          console.log("Yes, deleting");
+          window.location = `/PHP_TUTORIALS/crud_iNote/index.php?delete=${sno}`;
+        } else {
+          console.log("No deletion");
+        }
+      });
     });
-  });
-</script>
+  </script>
 
 </body>
 
