@@ -15,6 +15,13 @@ if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
 }
 
+if(isset($_GET['delete'])){
+  $sno = $_GET['delete'];
+  
+  $sql= "DELETE FROM `notes` WHERE `sno` = $sno";
+  $result=mysqli_query($conn, $sql);
+}
+
 if ($_SERVER['REQUEST_METHOD']=='POST'){
   if(isset( $_POST['snoEdit'])){
     // Update the record
@@ -158,7 +165,7 @@ else {
           <th scope='row'>".$sno ."</th>
           <td>".$row['title'] . "</td>
           <td>".$row['description'] ."</td>
-          <td> <button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <a href='/del'\>Delete</a></td>
+          <td> <button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <button class='delete btn btn-sm btn-primary' id=d".$row['sno'].">Delete</button></td>
         </tr>";
 
         }
@@ -198,6 +205,36 @@ else {
       // Open the modal
       let myModal = new bootstrap.Modal(document.getElementById('editModal'));
       myModal.show();
+    });
+  });
+
+  deletes = document.getElementsByClassName('delete');
+  Array.from(deletes).forEach((element) => {
+    element.addEventListener("click", (e) => {
+      console.log("Edit button clicked");
+      
+      // tr = e.target.closest("tr"); // Get the closest row
+      // title = tr.getElementsByTagName("td")[0].innerText;
+      // description = tr.getElementsByTagName("td")[1].innerText;
+      sno=e.target.id.substr(1,);
+      if(confirm("Press a button!")){
+        console.log("yes")
+        window.location=`/PHP_TUTORIALS/crud_iNote/index.php?delete=${sno}`;
+      }
+      else {
+        console.log("no");
+      }
+      
+      // console.log(title, description);
+      // snoEdit.value=e.target.id;
+      // console.log(e.target.id)
+      
+      // document.getElementById("titleEdit").value = title;
+      // document.getElementById("descriptionEdit").value = description;
+
+      // // Open the modal
+      // let myModal = new bootstrap.Modal(document.getElementById('editModal'));
+      // myModal.show();
     });
   });
 </script>
