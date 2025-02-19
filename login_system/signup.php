@@ -1,3 +1,25 @@
+<?php  
+$showAlert=false;
+if($_SERVER["REQUEST_METHOD"]=="POST"){
+
+    include 'partial/dbconnect.php';
+    $username=$_POST["username"];
+    $password=$_POST["password"];
+    $cpassword=$_POST["cpassword"];
+    $exists=false;
+    if(($password==$cpassword) && $exists==false){
+        $sql="INSERT INTO `users` ( `username`, `password`, `dt`) VALUES ('$username', '$password', current_timestamp())";
+        $result=mysqli_query($con,$sql);
+        if($result){
+            $showAlert=true;
+        }
+    }
+
+
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -11,15 +33,21 @@
 <body>
 
     <?php
-    require '../login_system/partial/nav.php';
-
+    require '../login_system/partial/nav.php'; ?>
+    <?php
+    if($showAlert){
+    echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> You Account is Created and you can Login.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>';
+    }
     ?>
     <div class="container">
         <h1 class="text-center">Signup to our Website</h1>
         <form action="/PHP_TUTORIALS/login_system/signup.php" method="post">
             <div class="mb-3 ">
                 <label for="username" class="form-label">User-name</label>
-                <input type="email" class="form-control" id="username" name="username" aria-describedby="emailHelp">
+                <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp">
                
             </div>
             <div class="mb-3">
@@ -28,7 +56,7 @@
             </div>
             <div class="mb-3">
                 <label for="cpassword" class="form-label">Confirm Password</label>
-                <input type="cpassword" class="form-control" id="cpassword" name="cpassword">
+                <input type="password" class="form-control" id="cpassword" name="cpassword">
                 <div id="emailHelp" class="form-text">Make Sure to type the same password.</div>
             </div>
 
