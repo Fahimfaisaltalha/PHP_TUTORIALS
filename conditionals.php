@@ -51,25 +51,30 @@
 // }
 // $d=date("d l Y");
 // echo "Date is $d";
-// $a=[
-//     "talha"=>18,
-//     "fahim "=>19
-// ];
-// // echo $a["talha"];
-// foreach($a as $key => $value){
-//     echo "$key is $value";
+$a=[
+    ["talha"=>'This is good',"age"=>25],
+    ["talha"=>'This is Bad',"age"=>35],
+];
+// echo $a["talha"]."\n";
+
+
+foreach($a as $key => $value){
+    echo ($key+1) ."is". $value['talha']."\n";
+}
+
+// foreach ($questions as $index => $question) {
+//     echo ($index + 1) . ". " . $question['question'] . "\n";
 // }
 
 
-
 //Local And Global Scope
- $a=20;
-function myfunction(){
-    global $a; 
-    echo "$a";
+//  $a=20;
+// function myfunction(){
+//     global $a; 
+//     echo "$a";
 
 
-}
-myfunction();
+// }
+// myfunction();
 
 ?>
